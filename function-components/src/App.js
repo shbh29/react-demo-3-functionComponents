@@ -1,46 +1,37 @@
 import './App.css';
-import React, {useState,useRef, useEffect} from 'react';
-import {debounce} from 'lodash';
+import React, {useReducer} from 'react';
 
-
-function getGitRepos(username = `shbh29`) {
-  return fetch(`https://api.github.com/users/${username}/repos`)
-  .then((resolve) => resolve.json()).catch((error) => {console.log(error)})
-  .then((data) => data).catch((error) => {console.log(error)});
+function counterReducer(state, action) {
+  switch(action) {
+    case "RESET":
+      return { count: 0};
+    case "INC":
+      return {count: state.count + 1};
+    case 'DEC':
+      return {count: state.count - 1};
+    default:
+      throw new Error("Invalid action");
+  }
 }
 
-function App() {
-  const [repos, setRepos] = useState([]);
-  const [text, setText] = useState('shbh29');
 
-  const fetchData = async (username) => {
-    console.log(`calling api with ${username}`)
-    const data = await getGitRepos(username);
-    if(Array.isArray(data)) {
-      setRepos(data);
-    }
-  }
-
-  const debouncedFetchDataRef = useRef(debounce(fetchData, 2000));
-
-  useEffect(() => {
-
-    debouncedFetchDataRef.current(text);
-  },[text]);
-
+function Counter() {
+  // const [count, setCount] = useState(0);
+  const [state, dispatch] = useReducer(counterReducer, {count: 0})
   return (
-    <div>
-      <input type='text' onChange={(event) => {
-        setText(event.target.value);
-      }} /> 
-      <h1>Below are git repos: {text}</h1>
-      <ul>
-        {repos.map((repo) => (
-          <li key={repo.id}> {repo.name} </li>
-        ))}
-      </ul>
+    <div class='App'>
+      <h1> {state.count}</h1>
+      <button onClick={() => {
+        dispatch("INC")
+      }}>Inc</button>
+      <button onClick={() => (
+        dispatch("RESET")
+      )}>Reset</button>
+      <button onClick={() => (
+        dispatch("DEC")
+      )}>Dec</button>
     </div>
   )
 }
 
-export default App;
+export default Counter;
