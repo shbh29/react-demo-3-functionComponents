@@ -4,6 +4,9 @@ import React, {useState, useEffect} from 'react';
 function App() {
   const [count, setCount] = useState(0);
   const [text, setText] = useState('Hello World!');
+  useEffect(()=> {
+    document.title = `${text} - ${count}`
+  }, [text])
   return (
     <>
       <input type='text' onChange={(event) => {
