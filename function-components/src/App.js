@@ -1,21 +1,17 @@
 import './App.css';
-import React, {useState, useEffect} from 'react';
+import React, {useRef} from 'react';
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [text, setText] = useState('Hello World!');
-  useEffect(()=> {
-    document.title = `${text} - ${count}`
-  }, [text])
+  const inputTextRef = useRef(null);
+
+  const onButtonClick = () => {
+    inputTextRef.current.focus();
+  }
+
   return (
     <>
-      <input type='text' onChange={(event) => {
-        setText(event.target.value);
-      }}></input>
-      <button onClick={() => {
-        setCount(count + 1);
-      }}>Click</button>
-      <h1>{text} - {count}</h1>
+      <input ref={inputTextRef} type='text' />
+      <button onClick={onButtonClick}>Focus on Button</button>
     </>
   )
 }
